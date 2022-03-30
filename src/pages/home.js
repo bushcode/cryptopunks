@@ -10,7 +10,6 @@ export default function Home() {
 	const [selectedPunk, setSelectedPunk] = useState(0);
 	const [searchText, setSearchText] = useState('');
 
-	const key = process.env.REACT_APP_OPEN_SEA_ADDRESS;
 	let savedPunks = JSON.parse(localStorage.getItem('punkList'));
 
 	console.log(searchText);
@@ -22,16 +21,17 @@ export default function Home() {
 			});
 			setCollections(filteredPunks);
 		} else {
-			console.log('something should happen');
+			// console.log('something should happen');
 			setCollections(savedPunks);
 		}
 	};
 
 	const getCollection = async () => {
 		const response = await axios.get(
-			`https://testnets-api.opensea.io/assets?asset_contract_address=${key}&order_direction=asc`,
+			'https://serene-thicket-77721.herokuapp.com/api/fetchNFTs',
 		);
-		const punkList = response.data.assets;
+		const punkList = response.data;
+		console.log(punkList);
 		localStorage.setItem('punkList', JSON.stringify(punkList));
 		setCollections(punkList);
 	};
@@ -43,11 +43,11 @@ export default function Home() {
 		handleSearch();
 	}, [searchText]);
 
-	// useEffect(() => {
-	// 	if (collections.length > 0) {
-	// 		setSelectedPunk(collections[0].token_id);
-	// 	}
-	// }, []);
+	useEffect(() => {
+		if (collections.length > 0) {
+			setSelectedPunk(collections[0].token_id);
+		}
+	}, []);
 	return (
 		<div>
 			<Header searchText={searchText} setSearchText={setSearchText} />
