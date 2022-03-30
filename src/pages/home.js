@@ -6,7 +6,7 @@ import PunkInfo from '../components/punkInfo';
 import EmptySearch from '../components/noSearch';
 
 export default function Home() {
-	const [collections, setCollections] = React.useState([]);
+	const [collections, setCollections] = React.useState(null);
 	const [selectedPunk, setSelectedPunk] = useState(0);
 	const [searchText, setSearchText] = useState('');
 
@@ -44,14 +44,14 @@ export default function Home() {
 	}, [searchText]);
 
 	useEffect(() => {
-		if (collections.length > 0) {
+		if (collections) {
 			setSelectedPunk(collections[0].token_id);
 		}
 	}, []);
-	return (
+	return collections ? (
 		<div>
 			<Header searchText={searchText} setSearchText={setSearchText} />
-			{collections.length > 0 ? (
+			{collections?.length > 0 ? (
 				<>
 					<PunkInfo collections={collections} selectedPunk={selectedPunk} />
 					<PunkList collections={collections} setSelectedPunk={setSelectedPunk} />
@@ -60,5 +60,7 @@ export default function Home() {
 				<EmptySearch />
 			)}
 		</div>
+	) : (
+		<p>firing up engines...</p>
 	);
 }
